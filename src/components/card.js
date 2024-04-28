@@ -15,7 +15,7 @@ const addCard = (itemValues, removeCallback, likeCallback, popupImgCallback) => 
 
   cardDeleteButton.addEventListener("click", () => removeCallback(cardElement));
   likeButton.addEventListener("click", likeCallback);
-  cardImage.addEventListener("click", popupImgCallback);
+  cardImage.addEventListener("click", () => popupImgCallback({ name: itemValues.name, link: itemValues.link }));
 
   return cardElement;
 };
@@ -26,11 +26,9 @@ const removeCard = (cardElement) => cardElement.remove();
 // Лайк карточек
 
 function likeCard(evt) {
-  if (evt.target.classList.contains("card__like-button_is-active")) {
-    evt.target.classList.remove("card__like-button_is-active");
-  } else {
-    evt.target.classList.add("card__like-button_is-active");
-  }
-}
+  if (evt.target.classList.contains("card__like-button")) {
+    evt.target.classList.toggle("card__like-button_is-active");
+  } 
+};
 
 export {addCard, removeCard, likeCard};
