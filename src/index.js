@@ -33,9 +33,10 @@ buttonCloseList.forEach((btn) => {
 
 // Редактирование имени и информации в профиле
 
-const formElement = document.querySelector(".popup_type_edit .popup__form");
+const profileForm = document.forms["edit-profile"];
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const profileSaveButton = popupProfileEdit.querySelector(".popup__button");
 const nameInput = document.querySelector(".popup__input_type_name");
 const jobInput = document.querySelector(".popup__input_type_description");
 
@@ -45,7 +46,7 @@ const handleProfileFormSubmit = (evt) => {
   const nameValue = nameInput.value;
   const jobValue = jobInput.value;
 
-  loadingButton(true, formElement.querySelector(".popup__button"));
+  changeButtonText(true, profileSaveButton);
 
   editProfile(nameValue, jobValue)
     .then((profileData) => {
@@ -53,15 +54,13 @@ const handleProfileFormSubmit = (evt) => {
       profileDescription.textContent = profileData.about;
       closeModal(popupProfileEdit);
     })
-    .catch((error) => {
-      console.log(error);
-    })
+    .catch(console.error)
     .finally(() => {
-      loadingButton(false, formElement.querySelector(".popup__button"));
+      changeButtonText(false, profileSaveButton);
     });
 };
 
-formElement.addEventListener("submit", handleProfileFormSubmit);
+profileForm.addEventListener("submit", handleProfileFormSubmit);
 
 // Открытие попапа "Новое место"
 
@@ -69,16 +68,17 @@ const popupNewCard = document.querySelector(".popup_type_new-card");
 const profileAddBtn = document.querySelector(".profile__add-button");
 
 profileAddBtn.addEventListener("click", () => {
-  formNewCard.reset();
+  newCardForm.reset();
   clearValidation(popupNewCard, validationConfig);
   openModal(popupNewCard);
 });
 
 // Добавление карточек на страницу
 
-const formNewCard = document.querySelector(".popup_type_new-card .popup__form");
+const newCardForm = document.forms["new-place"];
+const newCardSaveButton = popupNewCard.querySelector(".popup__button");
 const inputCardName = document.querySelector(".popup__input_type_card-name");
-const inputUrl = formNewCard.querySelector(".popup__input_type_url");
+const inputUrl = newCardForm.querySelector(".popup__input_type_url");
 
 const handleAddForm = (evt) => {
   evt.preventDefault();
@@ -86,7 +86,7 @@ const handleAddForm = (evt) => {
   const cardValue = inputCardName.value;
   const linkValue = inputUrl.value;
 
-  loadingButton(true, formNewCard.querySelector(".popup__button"));
+  changeButtonText(true, newCardSaveButton);
 
   addNewCard(cardValue, linkValue)
     .then((cardData) => {
@@ -94,15 +94,13 @@ const handleAddForm = (evt) => {
       placeList.prepend(cardElement);
       closeModal(popupNewCard);
     })
-    .catch((error) => {
-      console.log(error);
-    })
+    .catch(console.error)
     .finally(() => {
-      loadingButton(false, formNewCard.querySelector(".popup__button"));
+      changeButtonText(false, newCardSaveButton);
     });
 };
 
-formNewCard.addEventListener("submit", handleAddForm);
+newCardForm.addEventListener("submit", handleAddForm);
 
 // Открытие попапа с картинкой
 
@@ -124,14 +122,15 @@ const popupEditAvatar = document.querySelector(".popup_type_avatar");
 const avatarImageButton = document.querySelector(".profile__image-cover");
 
 avatarImageButton.addEventListener("click", () => {
-  clearValidation(popupEditAvatar, validationConfig);
   editAvatarForm.reset();
+  clearValidation(popupEditAvatar, validationConfig);
   openModal(popupEditAvatar);
 });
 
 // Изменение изображения аватара
 
-const editAvatarForm = document.querySelector(".popup_type_avatar .popup__form");
+const editAvatarForm = document.forms["edit-avatar"];
+const AvatarSaveButton = popupEditAvatar.querySelector(".popup__button");
 const avatarLinkInput = popupEditAvatar.querySelector(".popup__input_type_url");
 const avatarImage = document.querySelector(".profile__image");
 
@@ -140,18 +139,16 @@ function handleAvatarFormSubmit(evt) {
 
   const linkValue = avatarLinkInput.value;
 
-  loadingButton(true, editAvatarForm.querySelector(".popup__button"));
+  changeButtonText(true, AvatarSaveButton);
 
   updateAvatar(linkValue)
     .then((res) => {
       avatarImage.style.backgroundImage = `url('${res.avatar}')`;
       closeModal(popupEditAvatar);
     })
-    .catch((error) => {
-      console.log(error);
-    })
+    .catch(console.error)
     .finally(() => {
-      loadingButton(false, editAvatarForm.querySelector(".popup__button"));
+      changeButtonText(false, AvatarSaveButton);
     });
 }
 
@@ -163,7 +160,7 @@ enableValidation(validationConfig);
 
 // Изменение текста кнопки пока данные загружаются
 
-const loadingButton = (isLoading, button) => {
+const changeButtonText = (isLoading, button) => {
   button.textContent = isLoading ? "Сохранение..." : "Сохранить";
 };
 
@@ -184,6 +181,4 @@ Promise.all([getUserInfo(), getInitialCards()])
       placeList.append(addCard(item, removeCard, likeCard, openPopupImg, profileId));
     });
   })
-  .catch((error) => {
-    console.log(error);
-  });
+  .catch(console.error);

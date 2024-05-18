@@ -7,11 +7,16 @@
   line-height: 18px;
   box-sizing: border-box;
   padding: 10px 0 0;
-  margin-bottom: 10px;
 }
 
 .popup__input:last-of-type {
   margin-bottom: 0;
+}
+
+.popup__error {
+  display: block;
+  min-height: 32px;
+  margin-top: 7px;
 }
 
 .popup__input_type_error {
